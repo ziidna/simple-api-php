@@ -3,12 +3,15 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-// Routes
 
-$app->get('/[{name}]', function (Request $request, Response $response, array $args) {
-    // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
-
-    // Render index view
-    return $this->renderer->render($response, 'index.phtml', $args);
+// API group
+$app->group('/api', function () use ($app) {
+    // Version group
+    $app->group('/v1', function () use ($app) {
+ $app->get('/pizzas', 'getPizzas');
+ $app->get('/pizza/{id}', 'getPizza');
+ $app->post('/create', 'addPizza');
+ $app->put('/update/{id}', 'updatePizza');
+ $app->delete('/delete/{id}', 'deletePizza');
+ });
 });
