@@ -9,6 +9,10 @@ $app->get('/pizzas', function ($request, $response, $args) {
 	$sth = $this->db->prepare("SELECT * FROM pizza ORDER BY id");
 	$sth->execute();
 	$pizzas = $sth->fetchAll();
+
+	// log
+	$this->logger->addInfo("List of Pizza Retrieval");
+
 	return $this->response->withJson($pizzas);
 });
 
@@ -18,6 +22,10 @@ $app->get('/pizza/[{id}]', function ($request, $response, $args) {
 	$sth->bindParam("id", $args['id']);
 	$sth->execute();
 	$pizza = $sth->fetchObject();
+
+	// log
+	$this->logger->addInfo("Single Pizza Retrieval");
+	
 	return $this->response->withJson($pizza);
 });
 
@@ -31,6 +39,10 @@ $app->post('/pizza', function ($request, $response) {
 	$sth->bindParam("description", $input['description']);
 	$sth->execute();
 	$input['id'] = $this->db->lastInsertId();
+
+	// log
+	$this->logger->addInfo("Add new pizza");
+	
 	return $this->response->withJson($input);
 });
 	
@@ -39,6 +51,10 @@ $app->delete('/pizza/[{id}]', function ($request, $response, $args) {
 	$sth = $this->db->prepare("DELETE FROM pizza WHERE id=:id");
 	$sth->bindParam("id", $args['id']);
 	$sth->execute();
+	
+	// log
+	$this->logger->addInfo("Remove pizza");
+	
 	return $this->response->withJson('succeed');
 });
 
@@ -53,5 +69,9 @@ $app->put('/pizza/[{id}]', function ($request, $response, $args) {
 	$sth->bindParam("description", $input['description']);
 	$sth->execute();
 	$input['id'] = $args['id'];
+	
+	// log
+	$this->logger->addInfo("Update pizza");
+
 	return $this->response->withJson($input);
 });
